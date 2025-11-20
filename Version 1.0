@@ -1,0 +1,53 @@
+setcps(0.6);
+
+// --- THE CHORD DATA (4 Notes per block) ---
+// We ensure every chord has 4 notes so the Arp never wraps unexpectedly.
+const chordString = `
+  [a2,c3,e3,a3]
+  [c3,e3,g3,c4]
+  [d3,gb3,a3,d4]
+  [f3,a3,c4,f4]
+  [a2,c3,e3,a3]
+  [c3,e3,g3,c4]
+  [e3,gs3,b3,e4]
+  [e3,gs3,b3,e4]
+`;
+
+const bassString = `
+  a1 c2 d2 f2
+  a1 c2 e2 e2
+`;
+
+// --- THE INSTRUMENTS ---
+
+const guitar = note(chordString).slow(16)
+  .s("triangle")
+  .arp("0 1 2 3 2 1") 
+  // --- THE FIX ---
+  .legato(0.5)    // 1. Force a silence gap between notes
+  .sustain(0)     // 2. Do not hold the note level
+  .decay(0.2)     // 3. Quick fade out
+  // ----------------
+  .lpf(1500)
+  .gain(0.5);
+
+const organ = note(chordString).slow(16)
+  .s("gm_rock_organ")
+  .phaser(7).phaserdepth(0.6)
+  .sustain(1)
+  .gain(0.6);
+
+const bass = note(bassString).slow(16)
+  .s("square")
+  .lpf(300).decay(0.4).sustain(0)
+  .gain(0.6);
+
+const drums = s("bd ~ ~ sd ~ ~").n(3).gain(0.3);
+
+// --- PLAY ---
+stack(
+  drums,
+  bass,
+  organ,
+  guitar
+)
