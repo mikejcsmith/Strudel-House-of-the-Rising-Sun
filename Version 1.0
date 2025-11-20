@@ -1,7 +1,6 @@
 setcps(0.6);
 
-// --- THE CHORD DATA (4 Notes per block) ---
-// We ensure every chord has 4 notes so the Arp never wraps unexpectedly.
+// --- DATA ---
 const chordString = `
   [a2,c3,e3,a3]
   [c3,e3,g3,c4]
@@ -18,16 +17,19 @@ const bassString = `
   a1 c2 e2 e2
 `;
 
-// --- THE INSTRUMENTS ---
+// --- INSTRUMENTS ---
 
 const guitar = note(chordString).slow(16)
   .s("triangle")
-  .arp("0 1 2 3 2 1") 
-  // --- THE FIX ---
-  .legato(0.5)    // 1. Force a silence gap between notes
-  .sustain(0)     // 2. Do not hold the note level
-  .decay(0.2)     // 3. Quick fade out
-  // ----------------
+  
+  // --- THE TRIPLET TWEAK ---
+  // "0" = Beat 1 (Root)
+  // "[1 1 1]" = Beat 2 (The Third, played 3 times fast)
+  // "2 3 2 1" = The rest of the bar
+  .arp("0 [1 1 1] 2 3 2 1") 
+  
+  // We shorten the decay so the triplet sounds crisp, not muddy
+  .legato(0.5).sustain(0).decay(0.15) 
   .lpf(1500)
   .gain(0.5);
 
@@ -42,7 +44,7 @@ const bass = note(bassString).slow(16)
   .lpf(300).decay(0.4).sustain(0)
   .gain(0.6);
 
-const drums = s("bd ~ ~ sd ~ ~").n(3).gain(0.3);
+const drums = s("bd ~ ~ sd ~ ~").n(3).gain(0.2);
 
 // --- PLAY ---
 stack(
