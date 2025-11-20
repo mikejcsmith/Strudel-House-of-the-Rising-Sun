@@ -21,15 +21,9 @@ const bassString = `
 
 const guitar = note(chordString).slow(16)
   .s("triangle")
-  
-  // --- THE TRIPLET TWEAK ---
-  // "0" = Beat 1 (Root)
-  // "[1 1 1]" = Beat 2 (The Third, played 3 times fast)
-  // "2 3 2 1" = The rest of the bar
-  .arp("0 [1 1 1] 2 3 2 1") 
-  
-  // We shorten the decay so the triplet sounds crisp, not muddy
-  .legato(0.5).sustain(0).decay(0.15) 
+  // The "Rake" Triplet: 0 [0 1 2] 2...
+  .arp("0 [0 1 2] 2 3 2 1") 
+  .legato(0.5).sustain(0).decay(0.15)
   .lpf(1500)
   .gain(0.5);
 
@@ -44,11 +38,30 @@ const bass = note(bassString).slow(16)
   .lpf(300).decay(0.4).sustain(0)
   .gain(0.6);
 
-const drums = s("bd ~ ~ sd ~ ~").n(3).gain(0.2);
+
+// --- THE NEW DRUM SECTION ---
+
+// 1. THE SHELL (Kick & Snare)
+// User requested gain: 0.2 (Lowered)
+const kickSnare = s("bd ~ ~ sd ~ ~")
+  .n(3)
+  .gain(0.2);
+
+// 2. THE DRIVER (Hi-Hats)
+// We use mini-notation inside the string to create dynamics.
+// "hh:0.5" = Medium volume
+// "hh:0.2" = Quiet volume
+// Pattern: LOUD soft soft LOUD soft soft
+const hihats = s("hh:0.5 hh:0.2 hh:0.2 hh:0.5 hh:0.2 hh:0.2")
+  .n(14)    // n(14) is a nice crisp 'closed' hat sound
+  .cut(1)   // Keeps it tight
+  .gain(0.2); // Master volume for the hat track
+
 
 // --- PLAY ---
 stack(
-  drums,
+  kickSnare,
+  hihats,
   bass,
   organ,
   guitar
