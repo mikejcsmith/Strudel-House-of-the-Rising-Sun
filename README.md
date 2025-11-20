@@ -77,6 +77,7 @@ During the development of this track, we identified several specific constraints
 | **Organ** | `gm_rock_organ` | Uses `.phaser(7)` to simulate a rotating Leslie speaker cabinet. |
 | **Bass** | `square` | Low-passed at 300Hz to remove digital buzz, providing a warm foundation. |
 | **Drums** | `bd`, `sd` | Programmed in groups of 6 (`bd ~ ~ sd ~ ~`) to establish the 6/8 Waltz feel. |
+| **Crash** | `cr`| Triggered once every 16 bars (.slow(16)) to mark the top of the loop. |
 
 ---
 
