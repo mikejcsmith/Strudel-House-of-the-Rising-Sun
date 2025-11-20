@@ -1,5 +1,5 @@
 // 1. TEMPO (6/8 Feel - Slow Swing)
-setcps(0.6);
+setcps(0.7);
 
 // --- 2. THE DATA (Backticks for Bulletproof Parsing) ---
 const chordString = `
@@ -70,3 +70,32 @@ stack(
   organ,
   guitar
 )
+// --- FADE OUT LOGIC ---
+// Total Time: 16 Bars (.slow(16))
+// Bars 1-8: Fade from 1 to 0
+// Bars 9-16: Hold at 0 (Silence)
+// Bars 1-8:  Smooth fade from 1 to 0
+// Bars 9-16: Total Silence
+.gain(
+      cat(
+          saw.range(1, 0.4),   // Bars 1-4:   Fast drop (-60%)
+          saw.range(0.4, 0.1), // Bars 5-8:   Medium drop (-30%)
+          saw.range(0.1, 0),   // Bars 9-12:  Gentle tail (-10%)
+          0                    // Bars 13-16: Silence
+         ).slow(8)             // Stretch the WHOLE container to 16 bars
+    )
+
+/**
+.gain(1)
+
+// Fade out
+.gain(
+      cat(
+          saw.range(1, 0.4),   // Bars 1-4:   Fast drop (-60%)
+          saw.range(0.4, 0.1), // Bars 5-8:   Medium drop (-30%)
+          saw.range(0.1, 0),   // Bars 9-12:  Gentle tail (-10%)
+          0                    // Bars 13-16: Silence
+         ).slow(8)             // Stretch the WHOLE container to 16 bars
+    )
+
+**/
