@@ -1,6 +1,7 @@
+// 1. TEMPO (6/8 Feel - Slow Swing)
 setcps(0.6);
 
-// --- DATA ---
+// --- 2. THE DATA (Backticks for Bulletproof Parsing) ---
 const chordString = `
   [a2,c3,e3,a3]
   [c3,e3,g3,c4]
@@ -17,51 +18,54 @@ const bassString = `
   a1 c2 e2 e2
 `;
 
-// --- INSTRUMENTS ---
+// --- 3. THE INSTRUMENTS ---
 
+// GUITAR (The "Rake" Triplet)
+// We use the [0 1 2] triplet to simulate the pick sweeping across strings
 const guitar = note(chordString).slow(16)
   .s("triangle")
-  // The "Rake" Triplet: 0 [0 1 2] 2...
   .arp("0 [0 1 2] 2 3 2 1") 
-  .legato(0.5).sustain(0).decay(0.15)
+  .legato(0.5).sustain(0).decay(0.15) // Crisp plucks
   .lpf(1500)
   .gain(0.5);
 
+// ORGAN (Leslie Speaker Simulation)
 const organ = note(chordString).slow(16)
   .s("gm_rock_organ")
-  .phaser(7).phaserdepth(0.6)
+  .phaser(7).phaserdepth(0.6) // Swirling effect
   .sustain(1)
   .gain(0.6);
 
+// BASS (Warm Foundation)
 const bass = note(bassString).slow(16)
   .s("square")
   .lpf(300).decay(0.4).sustain(0)
   .gain(0.6);
 
+// --- 4. THE DRUMS (Separated Mix) ---
 
-// --- THE NEW DRUM SECTION ---
-
-// 1. THE SHELL (Kick & Snare)
-// User requested gain: 0.2 (Lowered)
+// KICK & SNARE (Backbone)
 const kickSnare = s("bd ~ ~ sd ~ ~")
   .n(3)
   .gain(0.2);
 
-// 2. THE DRIVER (Hi-Hats)
-// We use mini-notation inside the string to create dynamics.
-// "hh:0.5" = Medium volume
-// "hh:0.2" = Quiet volume
-// Pattern: LOUD soft soft LOUD soft soft
+// HI-HATS (Dynamics: ONE-two-three FOUR-five-six)
 const hihats = s("hh:0.5 hh:0.2 hh:0.2 hh:0.5 hh:0.2 hh:0.2")
-  .n(14)    // n(14) is a nice crisp 'closed' hat sound
-  .cut(1)   // Keeps it tight
-  .gain(0.2); // Master volume for the hat track
+  .n(14)
+  .cut(1)
+  .gain(0.3);
 
+// CRASH (The Loop Marker)
+// Hits on Beat 1, then waits 16 bars
+const crash = s("cr")
+  .slow(16)
+  .gain(0.4); 
 
-// --- PLAY ---
+// --- 5. PLAYBACK ---
 stack(
   kickSnare,
   hihats,
+  crash,
   bass,
   organ,
   guitar
