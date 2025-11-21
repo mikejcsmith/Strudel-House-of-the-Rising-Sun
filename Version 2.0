@@ -1,0 +1,29 @@
+// 1. Global Tempo (Adjusted for a slow 6/8 swing)
+setcps(0.45)
+
+// 2. The Harmony (The "Score")
+// We define the root notes and chain the chord type.
+// Cycle: Am | C | D | F | Am | E | Am | E
+const chords = note("<a2 c3 d3 f3 a2 e3 a2 e3>")
+  .chord("<minor major major major minor major minor major>")
+
+// 3. The Instrument: Electric Guitar Simulation
+// We use the 'sawtooth' wave with a Low Pass Filter (lpf) to take off the buzz.
+// .arp("0 1 2 3 2 1") creates the iconic "House of the Rising Sun" picking pattern.
+const guitar = chords
+  .arp("0 [1 1] 2 3 2 1") 
+  .s("sawtooth")
+  .lpf(1200).resonance(5) // Filter to mimic a clean amp tone
+  .decay(0.2).sustain(0)  // Plucky envelope (short notes)
+  .pan(0.2)               // Panned slightly right like a guitarist on stage
+  .gain(0.5)
+
+// 4. The Section: Intro
+// We wrap this in a stack so we can add hiss/atmosphere later if we want.
+const intro = stack(
+  guitar
+)
+
+// 5. Playback
+// We use cat() to sequence the sections. Right now, just the intro.
+cat(intro)
